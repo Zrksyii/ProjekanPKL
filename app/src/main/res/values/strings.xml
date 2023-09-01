@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Project_PKL</string>
+    <string name="welcome_to">Welcome to</string>
+    <string name="masukan_nama">Masukan Nama</string>
+    <string name="masukan_password">Masukan Password</string>
+    <string name="lupa_password">Lupa Password?</string>
+    <string name="masuk">Masuk</string>
+    <string name="absen_harus_foto_selfie_ya">Absen harus Foto Selfie ya!</string>
+    <string name="ambil_foto_selfie">Ambil Foto Selfie</string>
+    <string name="nama_anda">Nama Anda</string>
+    <string name="masukan_nama_anda">Masukan nama Anda</string>
+    <string name="tanggal_amp_waktu"><![CDATA[Tanggal & Waktu]]></string>
+    <string name="masukan_tanggal_dan_waktu">Masukan tanggal dan waktu</string>
+    <string name="lokasi">Lokasi</string>
+    <string name="masukan_lokasi">Masukan lokasi</string>
+    <string name="keterangan">Keterangan</string>
+    <string name="masukan_keterangan">Masukan Keterangan</string>
+    <string name="ups_anda_belum_absen_hari_ini">Ups, Anda belum absen hari ini</string>
+    <string name="history_absensi">History Absensi</string>
+    <string name="absensi_membutuhkan_info_lokasi_dan_hanya_bisa_dilakukan_jika_kamu_foto_selfie">Absensi membutuhkan info lokasi dan hanya bisa dilakukan jika kamu Foto Selfie.</string>
+    <string name="absen_masuk">Absen Masuk</string>
+    <string name="absen_keluar">Absen Keluar</string>
+    <string name="perizinan">Perizinan</string>
+    <string name="riwayat_nabsen_anda">Riwayat\nAbsen Anda</string>
+    <string name="no">No</string>
+    <string name="titikdua">:</string>
+    <string name="nomor">112233445566</string>
+    <string name="nama">Nama</string>
+    <string name="jabatan">Head Office</string>
+    <string name="waktu_absen">Waktu Absen</string>
+</resources>
