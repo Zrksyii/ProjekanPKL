@@ -14,13 +14,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 class HistoryAdapter(
     private val mContext: Context,
-    private val mAdapterCallback: MutableList<ModelDatabase>,
-    historyActivity: HistoryActivity
+    private val modelDatabase: MutableList<ModelDatabase>,
+    private val mAdapterCallback: HistoryAdapterCallback
 ) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
-
-    private var modelDatabase: MutableList<ModelDatabase> = mutableListOf()
-    private val inflater: LayoutInflater = LayoutInflater.from(mContext)
-    private lateinit var binding: ListHistoryAbsenBinding
 
     fun setDataAdapter(items: List<ModelDatabase>) {
         modelDatabase.clear()
@@ -29,51 +25,59 @@ class HistoryAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        binding = ListHistoryAbsenBinding.inflate(inflater, parent, false)
+        val binding =
+            ListHistoryAbsenBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = modelDatabase[position]
-        holder.bind(data)
-    }
 
-    override fun getItemCount(): Int = modelDatabase.size
+        // Gunakan binding untuk mengakses elemen UI
+        val binding = holder.binding
+        binding.tvNomor.text = data.uid.toString()
+        binding.tvNama.text = data.nama
+        binding.tvLokasi.text = data.lokasi
+        binding.tvAbsenTime.text = data.tanggal
+        binding.tvStatusAbsen.text = data.keterangan
 
-    inner class ViewHolder(private val binding: ListHistoryAbsenBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        Glide.with(mContext)
+            .load(base64ToBitmap(data.fotoSelfie))
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .placeholder(R.drawable.ic_photo_camera)
+            .into(binding.imageProfile)
 
-        fun bind(data: ModelDatabase) {
-            binding.tvNomor.text = data.uid.toString()
-            binding.tvNama.text = data.nama
-            binding.tvLokasi.text = data.lokasi
-            binding.tvAbsenTime.text = data.tanggal
-            binding.tvStatusAbsen.text = data.keterangan
-
-            Glide.with(mContext)
-                .load(base64ToBitmap(data.fotoSelfie))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(R.drawable.ic_photo_camera)
-                .into(binding.imageProfile)
-
-            when (data.keterangan) {
-                "Absen Masuk" -> setColorStatus(Color.GREEN)
-                "Absen Keluar" -> setColorStatus(Color.RED)
-                "Izin" -> setColorStatus(Color.BLUE)
-                else -> setColorStatus(Color.BLACK) // Default color
-            }
-
-            binding.cvHistory.setOnClickListener {
-                val modelDatabase = modelDatabase[adapterPosition]
-                mAdapterCallback.onDelete(modelDatabase)
-            }
+        // Setel click listener menggunakan binding
+        binding.cvHistory.setOnClickListener {
+            val modelLaundry = modelDatabase[holder.adapterPosition]
+            mAdapterCallback.onDelete(modelLaundry)
         }
 
-        private fun setColorStatus(color: Int) {
-            binding.colorStatus.setBackgroundResource(R.drawable.bg_circle_radius)
-            binding.colorStatus.backgroundTintList = ColorStateList.valueOf(color)
+        // Setel latar belakang dan tint untuk colorStatus berdasarkan data.keterangan
+        when (data.keterangan) {
+            "Absen Masuk" -> {
+                binding.colorStatus.setBackgroundResource(R.drawable.bg_circle_radius)
+                binding.colorStatus.backgroundTintList = ColorStateList.valueOf(Color.GREEN)
+            }
+
+            "Absen Keluar" -> {
+                binding.colorStatus.setBackgroundResource(R.drawable.bg_circle_radius)
+                binding.colorStatus.backgroundTintList = ColorStateList.valueOf(Color.RED)
+            }
+
+            "Izin" -> {
+                binding.colorStatus.setBackgroundResource(R.drawable.bg_circle_radius)
+                binding.colorStatus.backgroundTintList = ColorStateList.valueOf(Color.BLUE)
+            }
         }
     }
+
+    override fun getItemCount(): Int {
+        return modelDatabase.size
+    }
+
+    inner class ViewHolder(val binding: ListHistoryAbsenBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     interface HistoryAdapterCallback {
         fun onDelete(modelDatabase: ModelDatabase?)

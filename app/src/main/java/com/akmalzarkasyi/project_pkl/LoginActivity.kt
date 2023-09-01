@@ -8,9 +8,6 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.akmalzarkasyi.project_pkl.databinding.ActivityLoginBinding
 import com.akmalzarkasyi.project_pkl.utils.SessionLogin
-import kotlinx.android.synthetic.main.activity_login.btnLogin
-import kotlinx.android.synthetic.main.activity_login.inputNama
-import kotlinx.android.synthetic.main.activity_login.inputPassword
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -29,18 +26,22 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setPermission() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        val permissions = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+
+        val permissionsToRequest = mutableListOf<String>()
+        for (permission in permissions) {
+            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(permission)
+            }
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                permissionsToRequest.toTypedArray(),
                 REQ_PERMISSION
             )
         }
@@ -54,9 +55,9 @@ class LoginActivity : AppCompatActivity() {
             finish()
         }
 
-        btnLogin.setOnClickListener {
-            strNama = inputNama.text.toString()
-            strPassword = inputPassword.text.toString()
+        binding.btnLogin.setOnClickListener {
+            strNama = binding.inputNama.text.toString()
+            strPassword = binding.inputPassword.text.toString()
 
             if (strNama.isEmpty() || strPassword.isEmpty()) {
                 Toast.makeText(

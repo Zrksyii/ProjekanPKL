@@ -29,17 +29,11 @@ import com.karumi.dexter.BuildConfig
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import kotlinx.android.synthetic.main.activity_absen.btnAbsen
-import kotlinx.android.synthetic.main.activity_absen.imageSelfie
-import kotlinx.android.synthetic.main.activity_absen.inputKeterangan
-import kotlinx.android.synthetic.main.activity_absen.inputLokasi
-import kotlinx.android.synthetic.main.activity_absen.inputNama
-import kotlinx.android.synthetic.main.activity_absen.inputTanggal
-import kotlinx.android.synthetic.main.activity_absen.layoutImage
-import kotlinx.android.synthetic.main.activity_absen.toolbar
-import kotlinx.android.synthetic.main.activity_absen.tvTitle
+import com.karumi.dexter.listener.single.PermissionListener
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -75,15 +69,23 @@ class AbsenActivity : AppCompatActivity() {
         setCurrentLocation()
         setUploadData()
     }
+
     private fun setCurrentLocation() {
         progressDialog.show()
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        // Cek izin lokasi
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            // Izin lokasi belum diberikan, minta izin
+            requestLocationPermission()
+            progressDialog.dismiss()
             return
         }
+
         fusedLocationClient.lastLocation
             .addOnSuccessListener(this) { location ->
                 progressDialog.dismiss()
@@ -96,13 +98,12 @@ class AbsenActivity : AppCompatActivity() {
                             geocoder.getFromLocation(strCurrentLatitude, strCurrentLongitude, 1)
                         if (addressList != null && addressList.size > 0) {
                             strCurrentLocation = addressList[0].getAddressLine(0)
-                            inputLokasi.setText(strCurrentLocation)
+                            binding.inputLokasi.setText(strCurrentLocation)
                         }
                     } catch (e: IOException) {
                         e.printStackTrace()
                     }
                 } else {
-                    progressDialog.dismiss()
                     Toast.makeText(this@AbsenActivity,
                         "Ups, gagal mendapatkan lokasi. Silahkan periksa GPS atau koneksi internet Anda!",
                         Toast.LENGTH_SHORT).show()
@@ -112,13 +113,37 @@ class AbsenActivity : AppCompatActivity() {
             }
     }
 
+    private fun requestLocationPermission() {
+        // Meminta izin lokasi
+        Dexter.withContext(this@AbsenActivity)
+            .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+            .withListener(object : PermissionListener {
+                override fun onPermissionGranted(response: PermissionGrantedResponse?) {
+                    // Izin diberikan, coba mendapatkan lokasi lagi
+                    setCurrentLocation()
+                }
+
+                override fun onPermissionDenied(response: PermissionDeniedResponse?) {
+                    // Izin ditolak, berikan pesan ke pengguna
+                    Toast.makeText(this@AbsenActivity,
+                        "Izin lokasi dibutuhkan untuk aplikasi ini.",
+                        Toast.LENGTH_LONG).show()
+                }
+
+                override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken?) {
+                    // Izin ditolak, berikan penjelasan
+                    token?.continuePermissionRequest()
+                }
+            }).check()
+    }
+
     private fun setInitLayout() {
         progressDialog = ProgressDialog(this)
         strTitle = intent.extras?.getString(DATA_TITLE).toString()
 
-        tvTitle.text = strTitle
+        binding.tvTitle.text = strTitle
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         if (supportActionBar != null) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -127,7 +152,7 @@ class AbsenActivity : AppCompatActivity() {
         absenViewModel = ViewModelProvider(this, (ViewModelProvider.AndroidViewModelFactory
             .getInstance(this.application) as ViewModelProvider.Factory)).get(AbsenViewModel::class.java)
 
-        inputTanggal.setOnClickListener {
+        binding.inputTanggal.setOnClickListener {
             val tanggalAbsen = Calendar.getInstance()
             val date =
                 DatePickerDialog.OnDateSetListener { _: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
@@ -136,7 +161,7 @@ class AbsenActivity : AppCompatActivity() {
                     tanggalAbsen[Calendar.DAY_OF_MONTH] = dayOfMonth
                     val strFormatDefault = "dd MMMM yyyy HH:mm"
                     val simpleDateFormat = SimpleDateFormat(strFormatDefault, Locale.getDefault())
-                    inputTanggal.setText(simpleDateFormat.format(tanggalAbsen.time))
+                    binding.inputTanggal.setText(simpleDateFormat.format(tanggalAbsen.time))
                 }
             DatePickerDialog(
                 this@AbsenActivity, date,
@@ -146,7 +171,7 @@ class AbsenActivity : AppCompatActivity() {
             ).show()
         }
 
-        layoutImage.setOnClickListener {
+        binding.layoutImage.setOnClickListener {
             Dexter.withContext(this@AbsenActivity)
                 .withPermissions(
                     Manifest.permission.CAMERA,
@@ -189,6 +214,10 @@ class AbsenActivity : AppCompatActivity() {
                                 Toast.makeText(this@AbsenActivity,
                                     "Ups, gagal membuka kamera", Toast.LENGTH_SHORT).show()
                             }
+                        } else {
+                            Toast.makeText(this@AbsenActivity,
+                                "Izin tidak diberikan. Anda perlu memberikan izin terlebih dahulu",
+                                Toast.LENGTH_SHORT).show()
                         }
                     }
 
@@ -203,10 +232,10 @@ class AbsenActivity : AppCompatActivity() {
     }
 
     private fun setUploadData() {
-        btnAbsen.setOnClickListener {
-            val strNama = inputNama.text.toString()
-            val strTanggal = inputTanggal.text.toString()
-            val strKeterangan = inputKeterangan.text.toString()
+        binding.btnAbsen.setOnClickListener {
+            val strNama = binding.inputNama.text.toString()
+            val strTanggal = binding.inputTanggal.text.toString()
+            val strKeterangan = binding.inputKeterangan.text.toString()
             if (strFilePath.equals(null) || strNama.isEmpty() || strCurrentLocation.isEmpty()
                 || strTanggal.isEmpty() || strKeterangan.isEmpty()) {
                 Toast.makeText(this@AbsenActivity,
@@ -282,7 +311,7 @@ class AbsenActivity : AppCompatActivity() {
                     .load(scaledBitmap)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.ic_photo_camera)
-                    .into(imageSelfie)
+                    .into(binding.imageSelfie)
                 strBase64Photo = bitmapToBase64(scaledBitmap)
             }
         }

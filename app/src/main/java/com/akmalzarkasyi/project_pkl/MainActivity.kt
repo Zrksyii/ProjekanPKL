@@ -6,11 +6,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import com.akmalzarkasyi.project_pkl.databinding.ActivityMainBinding
 import com.akmalzarkasyi.project_pkl.utils.SessionLogin
-import kotlinx.android.synthetic.main.activity_main.cvAbsenKeluar
-import kotlinx.android.synthetic.main.activity_main.cvAbsenMasuk
-import kotlinx.android.synthetic.main.activity_main.cvPerizinan
-import kotlinx.android.synthetic.main.activity_main.imageLogout
-import kotlinx.android.synthetic.main.list_history_absen.cvHistory
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -30,33 +25,33 @@ class MainActivity : AppCompatActivity() {
         session = SessionLogin(this)
         session.checkLogin()
 
-        cvAbsenMasuk.setOnClickListener {
+        binding.cvAbsenMasuk.setOnClickListener {
             strTitle = "Absen Masuk"
             val intent = Intent(this@MainActivity, AbsenActivity::class.java)
             intent.putExtra(AbsenActivity.DATA_TITLE, strTitle)
             startActivity(intent)
         }
 
-        cvAbsenKeluar.setOnClickListener {
+        binding.cvAbsenKeluar.setOnClickListener {
             strTitle = "Absen Keluar"
             val intent = Intent(this@MainActivity, AbsenActivity::class.java)
             intent.putExtra(AbsenActivity.DATA_TITLE, strTitle)
             startActivity(intent)
         }
 
-        cvPerizinan.setOnClickListener {
+        binding.cvPerizinan.setOnClickListener {
             strTitle = "Izin"
             val intent = Intent(this@MainActivity, AbsenActivity::class.java)
             intent.putExtra(AbsenActivity.DATA_TITLE, strTitle)
             startActivity(intent)
         }
 
-        cvHistory.setOnClickListener {
+        binding.cvHistory.setOnClickListener {
             val intent = Intent(this@MainActivity, HistoryActivity::class.java)
             startActivity(intent)
         }
 
-        imageLogout.setOnClickListener {
+        binding.imageLogout.setOnClickListener {
             val builder = AlertDialog.Builder(this@MainActivity)
             builder.setMessage("Yakin Anda ingin Logout?")
             builder.setCancelable(true)
