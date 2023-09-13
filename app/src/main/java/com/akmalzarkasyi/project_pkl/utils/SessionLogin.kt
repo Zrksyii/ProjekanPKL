@@ -5,10 +5,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import com.akmalzarkasyi.project_pkl.LoginActivity
 
-class SessionLogin(var context: Context) {
-    var pref: SharedPreferences
-    var editor: SharedPreferences.Editor
-    var PRIVATE_MODE = 0
+class SessionLogin(private var context: Context) {
+    private var pref: SharedPreferences
+    private var editor: SharedPreferences.Editor
+    private var PRIVATE_MODE = 0
 
     fun createLoginSession(nama: String) {
         editor.putBoolean(IS_LOGIN, true)

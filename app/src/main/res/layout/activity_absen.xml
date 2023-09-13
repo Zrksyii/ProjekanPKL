@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background2"
     android:fitsSystemWindows="true"
     tools:context=".AbsenActivity">
 
@@ -65,7 +66,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:background="@android:color/holo_red_light"
+                        android:background="@android:color/holo_blue_light"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -142,7 +143,7 @@
                             android:id="@+id/inputNama"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
-                            android:backgroundTint="@android:color/holo_red_light"
+                            android:backgroundTint="@android:color/holo_blue_light"
                             android:hint="@string/masukan_nama_anda"
                             android:imeOptions="actionNext"
                             android:maxLines="1"
@@ -172,7 +173,7 @@
                             android:id="@+id/inputTanggal"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
-                            android:backgroundTint="@android:color/holo_red_light"
+                            android:backgroundTint="@android:color/holo_blue_light"
                             android:focusableInTouchMode="false"
                             android:hint="@string/masukan_tanggal_dan_waktu"
                             android:imeOptions="actionNext"
@@ -203,7 +204,7 @@
                             android:id="@+id/inputLokasi"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
-                            android:backgroundTint="@android:color/holo_red_light"
+                            android:backgroundTint="@android:color/holo_blue_light"
                             android:focusableInTouchMode="false"
                             android:hint="@string/masukan_lokasi"
                             android:imeOptions="actionNext"
@@ -232,7 +233,7 @@
                             android:id="@+id/inputKeterangan"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
-                            android:backgroundTint="@android:color/holo_red_light"
+                            android:backgroundTint="@android:color/holo_blue_light"
                             android:hint="@string/masukan_keterangan"
                             android:imeOptions="actionDone"
                             android:maxLines="1"
@@ -256,7 +257,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="40dp"
                 android:layout_marginBottom="20dp"
-                android:backgroundTint="@android:color/holo_red_light"
+                android:backgroundTint="@android:color/holo_blue_light"
                 android:text="@string/masuk"
                 android:textAllCaps="false"
                 android:textColor="@color/white"

@@ -10,7 +10,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class AbsenViewModel(application: Application) : AndroidViewModel(application) {
-    var databaseDao: DatabaseDao? = getInstance(application)?.appDatabase?.databaseDao()
+    private var databaseDao: DatabaseDao? = getInstance(application)?.appDatabase?.databaseDao()
 
     fun addDataAbsen(
         foto: String, nama: String,

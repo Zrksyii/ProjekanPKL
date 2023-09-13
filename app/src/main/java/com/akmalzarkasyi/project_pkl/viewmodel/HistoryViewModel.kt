@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 class HistoryViewModel(application: Application) : AndroidViewModel(application) {
     var dataLaporan: LiveData<List<ModelDatabase>>
-    var databaseDao: DatabaseDao? = getInstance(application)?.appDatabase?.databaseDao()
+    private var databaseDao: DatabaseDao? = getInstance(application)?.appDatabase?.databaseDao()
 
     fun deleteDataById(uid: Int) {
         Completable.fromAction {

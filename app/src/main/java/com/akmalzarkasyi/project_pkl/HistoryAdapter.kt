@@ -54,18 +54,16 @@ class HistoryAdapter(
         }
 
         // Setel latar belakang dan tint untuk colorStatus berdasarkan data.keterangan
-        when (data.keterangan) {
-            "Absen Masuk" -> {
+        when (position % 3) {
+            0 -> {
                 binding.colorStatus.setBackgroundResource(R.drawable.bg_circle_radius)
                 binding.colorStatus.backgroundTintList = ColorStateList.valueOf(Color.GREEN)
             }
-
-            "Absen Keluar" -> {
+            1 -> {
                 binding.colorStatus.setBackgroundResource(R.drawable.bg_circle_radius)
                 binding.colorStatus.backgroundTintList = ColorStateList.valueOf(Color.RED)
             }
-
-            "Izin" -> {
+            2 -> {
                 binding.colorStatus.setBackgroundResource(R.drawable.bg_circle_radius)
                 binding.colorStatus.backgroundTintList = ColorStateList.valueOf(Color.BLUE)
             }
